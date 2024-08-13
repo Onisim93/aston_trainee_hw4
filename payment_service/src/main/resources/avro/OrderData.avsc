@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "OrderData",
+  "namespace": "com.example",
+  "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "restaurantId", "type": "long"},
+    {"name": "userId", "type": "long"},
+    {"name": "status", "type": "string"},
+    {"name": "totalSum", "type": "double"},
+    {
+      "name": "meals",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "OrderItem",
+          "fields": [
+            {
+              "name": "mealId",
+              "type": "long"
+            },
+            {
+              "name": "quantity",
+              "type": "int"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

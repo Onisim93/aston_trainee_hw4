@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: restaurant-service
+  datasource:
+    url: jdbc:postgresql://postgres2:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: restaurants
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      key-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      max-poll-records: 10
+      properties:
+        schema.registry.url: http://schema-registry:8085
+        specific.avro.reader: true
+    producer:
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://schema-registry:8085
+      acks: all  # Продюсер ждет подтверждения от лидера, но не от реплик. Это баланс между скоростью и надежностью.
+      retries: 10  # Количество повторных попыток отправки при ошибках
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    clear-checksums: true
+eureka:
+  client:
+    service-url.defaultZone: http://eureka-server:8081/eureka/
+
+server:
+  port: 0
+
+logging:
+  level:
+    root: info
+
+

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Onisim Albarov
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: notifications
+      changes:
+        - dropTable:
+            tableName: notifications
+  - changeSet:
+      id: 2
+      author: Onisim Albarov
+      changes:
+        - sql:
+            sql: CREATE SEQUENCE notification_sequence START WITH 1 INCREMENT BY 1;
+  - changeSet:
+      id: 3
+      author: Onisim Albarov
+      changes:
+        - createTable:
+            tableName: notifications
+            columns:
+              - column:
+                  name: idempotency_key
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: notification-server
+  datasource:
+    url: jdbc:postgresql://postgres4:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    clear-checksums: true
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+server:
+  port: 9090
+grpc:
+  server:
+    port: 9090

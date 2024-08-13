@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+        routes:
+          - id: order-service
+            uri: lb://ORDER-SERVICE
+            predicates:
+              - Path=/order/**
+            filters:
+              - name: StripPrefix
+                args:
+                  parts: 1
+
+              - name: Retry
+                args:
+                  retries: 3
+                  statuses: BAD_GATEWAY, GATEWAY_TIMEOUT
+                  methods: GET, POST
+          - id: restaurant-service
+            uri: lb://RESTAURANT-SERVICE
+            predicates:
+              - Path=/restaurant/**
+            filters:
+              - name: StripPrefix
+                args:
+                  parts: 1
+
+              - name: Retry
+                args:
+                  retries: 3
+                  statuses: BAD_GATEWAY, GATEWAY_TIMEOUT
+                  methods: GET, POST
+          - id: payment-service
+            uri: lb://PAYMENT-SERVICE
+            predicates:
+              - Path=/payment/**
+            filters:
+              - name: StripPrefix
+                args:
+                  parts: 1
+
+              - name: Retry
+                args:
+                  retries: 3
+                  statuses: BAD_GATEWAY, GATEWAY_TIMEOUT
+                  methods: GET, POST
+        http-client:
+          connect-timeout: 1000
+          response-timeout: 3000
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url.defaultZone: http://eureka-server:8081/eureka
+
+
+
+
+

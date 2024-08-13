@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:postgresql://postgres1:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    clear-checksums: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: orders
+      auto-offset-reset: earliest
+      key-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: http://schema-registry:8085
+        specific.avro.reader: true
+    producer:
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      retries: 10  # Количество повторных попыток отправки при ошибках
+      properties:
+        schema.registry.url: http://schema-registry:8085
+eureka:
+  client:
+    service-url.defaultZone: http://eureka-server:8081/eureka/
+
+
+grpc:
+  client:
+      notification-service:
+          address: static://notification-service:9090
+          negotiation-type: plaintext
+server:
+  port: 0
+
+logging:
+  level:
+    root: info
+
+avro:
+  schema:
+    registry:
+      url: http://schema-registry:8085
+
+
+
+

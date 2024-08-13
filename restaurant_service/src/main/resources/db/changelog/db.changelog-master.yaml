@@ -1,0 +1,194 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Onisim Albarov
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: restaurants
+      changes:
+        - dropTable:
+            tableName: restaurants
+  - changeSet:
+      id: 2
+      author: Onisim Albarov
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: meals
+      changes:
+        - dropTable:
+            tableName: meals
+  - changeSet:
+      id: 3
+      author: Onisim Albarov
+      changes:
+        - sql:
+            sql: CREATE SEQUENCE restaurant_sequence START WITH 1 INCREMENT BY 1;
+        - sql:
+            sql: CREATE SEQUENCE meal_sequence START WITH 1 INCREMENT BY 1;
+  - changeSet:
+      id: 4
+      author: Onisim Albarov
+      changes:
+        - createTable:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  defaultValueSequenceNext: restaurant_sequence
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: meals
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  defaultValueSequenceNext: meal_sequence
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: MONEY
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: restaurant_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseTableName: meals
+            baseColumnNames: restaurant_id
+            referencedTableName: restaurants
+            referencedColumnNames: id
+            constraintName: fk_meal_restaurant
+            onDelete: CASCADE
+  - changeSet:
+      id: 5
+      author: Onisim Albarov
+      changes:
+        - insert:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: name
+                  value: "Restaurant №1"
+        - insert:
+            tableName: restaurants
+            columns:
+              - column:
+                  name: name
+                  value: "Restaurant №2"
+  - changeSet:
+      id: 6
+      author: Onisim Albarov
+      changes:
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Salad Cesar"
+              - column:
+                  name: price
+                  value: "120.00"
+              - column:
+                  name: quantity
+                  value: "2"
+              - column:
+                  name: restaurant_id
+                  value: 1
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Tomato soup"
+              - column:
+                  name: price
+                  value: "250.00"
+              - column:
+                  name: quantity
+                  value: "2"
+              - column:
+                  name: restaurant_id
+                  value: 1
+
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Tomato soup"
+              - column:
+                  name: price
+                  value: "250.00"
+              - column:
+                  name: quantity
+                  value: "2"
+              - column:
+                  name: restaurant_id
+                  value: 1
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Onion soup"
+              - column:
+                  name: price
+                  value: "200.00"
+              - column:
+                  name: quantity
+                  value: "5"
+              - column:
+                  name: restaurant_id
+                  value: 2
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Greek salad"
+              - column:
+                  name: price
+                  value: "150.00"
+              - column:
+                  name: quantity
+                  value: "3"
+              - column:
+                  name: restaurant_id
+                  value: 2
+        - insert:
+            tableName: meals
+            columns:
+              - column:
+                  name: name
+                  value: "Cheese sticks"
+              - column:
+                  name: price
+                  value: "100.00"
+              - column:
+                  name: quantity
+                  value: "5"
+              - column:
+                  name: restaurant_id
+                  value: 2
